@@ -6,3 +6,9 @@
 ```clojure
 (defonce counter (r/atom 0))
 ```
+###### 2. r/render-component
+渲染模块,可以对cljs纯函数单独测试,单独显示,cljs repl交互式开发
+```clojure
+(defn todo-app [] [:h1 "test..."])
+(r/render-component [todo-app] (. js/document (getElementById "app")))
+```

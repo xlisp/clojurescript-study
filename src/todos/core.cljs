@@ -4,7 +4,7 @@
             [cljs-http.client :as http]
             [cljs.core.async :refer [<!]]))
 (enable-console-print!)
-
+;;(in-ns 'todos.core)
 (defonce todos (r/atom (sorted-map)))
 
 ;; (todos-list-init) ；；=> @todos-list
@@ -19,11 +19,24 @@
           (reset! todos (zipmap  (map :id body) body) )
           ))))
 
+(defn create-todo [text]
+  (go (let [response
+            (<!
+             (http/post "http://127.0.0.1:3001/todos"
+                        {:with-credentials? false
+                         :query-params {:title text}}))]
+        (prn (:body response))
+        )))       
+
+;;;;;
 (defonce counter (r/atom 0))
 
 (defn add-todo [text]
   (let [id (swap! counter inc)]
-    (swap! todos assoc id {:id id :title text :done false})))
+    (do
+      (swap! todos assoc id {:id id :title text :done false})
+      )
+    ))
 
 (defn toggle [id] (swap! todos update-in [id :done] not))
 (defn save [id title] (swap! todos assoc-in [id :title] title))

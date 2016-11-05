@@ -8,16 +8,16 @@
 (defonce todos (r/atom (sorted-map)))
 
 ;; (todos-list-init) ；；=> @todos-list
-(defonce todos-list (r/atom (sorted-map)))
-(def todos-list-init
-  #(go (let [response
-             (<!
-              (http/get "http://127.0.0.1:3001/todos"
-                        {:with-credentials? false
-                         :query-params {"since" ""}}))]
-         (let [body (:body response)]
-           (reset! todos-list (zipmap  (map :id body) body) )
-           ))))
+;; (defonce todos-list (r/atom (sorted-map)))
+(defonce todos-list-init
+  (go (let [response
+            (<!
+             (http/get "http://127.0.0.1:3001/todos"
+                       {:with-credentials? false
+                        :query-params {"since" ""}}))]
+        (let [body (:body response)]
+          (reset! todos (zipmap  (map :id body) body) )
+          ))))
 
 (defonce counter (r/atom 0))
 
@@ -33,12 +33,12 @@
 (defn complete-all [v] (swap! todos mmap map #(assoc-in % [1 :done] v)))
 (defn clear-done [] (swap! todos mmap remove #(get-in % [1 :done])))
 
-(defonce init (do
-                (add-todo "Rename Cloact to Reagent")
-                (add-todo "Add undo demo")
-                (add-todo "Make all rendering async")
-                (add-todo "Allow any arguments to component functions")
-                (complete-all true)))
+;;(defonce init (do
+;;                (add-todo "Rename Cloact to Reagent")
+;;                (add-todo "Add undo demo")
+;;                (add-todo "Make all rendering async")
+;;                (add-todo "Allow any arguments to component functions")
+;;                (complete-all true)))
 
 (defn todo-input [{:keys [title on-save on-stop]}]
   (let [val (r/atom title)

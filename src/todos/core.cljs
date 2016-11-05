@@ -1,8 +1,23 @@
 (ns todos.core
-  (:require [reagent.core :as r :refer [atom]]))
+  (:require-macros [cljs.core.async.macros :refer [go]])
+  (:require [reagent.core :as r :refer [atom]]
+            [cljs-http.client :as http]
+            [cljs.core.async :refer [<!]]))
 (enable-console-print!)
 
 (defonce todos (r/atom (sorted-map)))
+
+;; (todos-list-init) ；；=> @todos-list
+(defonce todos-list (r/atom (sorted-map)))
+(def todos-list-init
+  #(go (let [response
+             (<!
+              (http/get "http://127.0.0.1:3001/todos"
+                        {:with-credentials? false
+                         :query-params {"since" ""}}))]
+         (let [body (:body response)]
+           (reset! todos-list (zipmap  (map :id body) body) )
+           ))))
 
 (defonce counter (r/atom 0))
 

@@ -19,24 +19,24 @@
           (reset! todos (zipmap  (map :id body) body) )
           ))))
 
-(defn create-todo [text]
+(defn create-todo [text body]
   (go (let [response
             (<!
              (http/post "http://127.0.0.1:3001/todos"
                         {:with-credentials? false
                          :query-params {:title text}}))]
-        (prn (:body response))
+        (body (:body response))
         )))       
 
-;;;;;
 (defonce counter (r/atom 0))
 
 (defn add-todo [text]
-  (let [id (swap! counter inc)]
-    (do
-      (swap! todos assoc id {:id id :title text :done false})
-      )
-    ))
+  (do
+    (create-todo
+     text
+     #(swap! todos assoc (:id %) {:id (:id %) :title (:title %) :done false}))
+    )
+  )
 
 (defn toggle [id] (swap! todos update-in [id :done] not))
 (defn save [id title] (swap! todos assoc-in [id :title] title))
@@ -45,13 +45,6 @@
 (defn mmap [m f a] (->> m (f a) (into (empty m))))
 (defn complete-all [v] (swap! todos mmap map #(assoc-in % [1 :done] v)))
 (defn clear-done [] (swap! todos mmap remove #(get-in % [1 :done])))
-
-;;(defonce init (do
-;;                (add-todo "Rename Cloact to Reagent")
-;;                (add-todo "Add undo demo")
-;;                (add-todo "Make all rendering async")
-;;                (add-todo "Allow any arguments to component functions")
-;;                (complete-all true)))
 
 (defn todo-input [{:keys [title on-save on-stop]}]
   (let [val (r/atom title)

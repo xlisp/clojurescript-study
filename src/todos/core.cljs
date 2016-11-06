@@ -144,7 +144,7 @@
         [:label {:on-double-click #(reset! editing true)} title]
         [:button.destroy {:on-click #(delete id)}]
         [:button.reply {:on-click #(set! (.-display (.-style (. js/document (getElementById (str "input-label-id-" id)))) ) "block") }]
-        [:label.input-label { :id (str "input-label-id-" id) } (new-todo-par @todo-par-id)]
+        [:label.input-label { :id (str "input-label-id-" id) } (new-todo-par id)]
         ]
        (when @editing
          [todo-edit {:class "edit" :title title
@@ -156,14 +156,12 @@
                :on-save add-todo}]
   )
 
-(defonce todo-par-id (r/atom nil))
-
 (def new-todo-par
   (fn [id]
     [todo-input-par
      {:id id
       :type "text"
-      :placeholder (str "what needs to be done for " id " ?")
+      :placeholder (str "Subneed to be done for " id "?")
       :on-save add-todo
       }]
     )

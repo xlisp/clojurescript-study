@@ -21,12 +21,12 @@
             (js/alert "Get todo list failure, pelease check the todos api!"))
           ))))
 
-(defn create-todo [text body]
+(defn create-todo [text pid body]
   (go (let [response
             (<!
              (http/post todo-api-url
                         {:with-credentials? false
-                         :query-params {:title text}}))]
+                         :query-params {:title text :pid pid}}))]
         (if (= (:status response) 201)
           (body (:body response))
           (js/alert "Create todo failure!"))
@@ -53,10 +53,13 @@
 
 (defonce counter (r/atom 0))
 
-(defn add-todo [text]
-  (create-todo
-   text
-   #(swap! todos assoc (:id %) {:id (:id %) :title (:title %) :done false}))
+(defn add-todo [text pid]
+  (do
+    (create-todo
+     text
+     pid
+     #(swap! todos assoc (:id %) {:id (:id %) :title (:title %) :done false}))
+    )
   )
 
 (defn toggle [id] (swap! todos update-in [id :done] not))
@@ -162,7 +165,7 @@
      {:id id
       :type "text"
       :placeholder (str "Subneed to be done for " id "?")
-      :on-save add-todo
+      :on-save #(add-todo % id)
       }]
     )
   )

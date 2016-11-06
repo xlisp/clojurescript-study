@@ -23,7 +23,9 @@
              (http/post "http://127.0.0.1:3001/todos"
                         {:with-credentials? false
                          :query-params {:title text}}))]
-        (body (:body response))
+        (if (= (:status response) 201)
+          (body (:body response))
+          (js/alert "Create todo failure!"))
         )))       
 
 (defn update-todo [id text body]
@@ -34,6 +36,16 @@
                         :query-params {:title text}}))]
         (body (:status response))
         )))
+
+(defn delete-todo [id body]
+  (go (let [response
+            (<!
+             (http/delete (str "http://127.0.0.1:3001/todos/" id)
+                          {:with-credentials? false
+                           :query-params {}}))]
+        (body (:status response))
+        )))
+
 
 (defonce counter (r/atom 0))
 
@@ -50,11 +62,18 @@
    id title
    #(if (= % 204)
       (swap! todos assoc-in [id :title] title)
-      (js/alert (str "Update todo" id "failure!")))
+      (js/alert (str "Update todo " id " failure!")))
    )
   )
 
-(defn delete [id] (swap! todos dissoc id))
+(defn delete [id]
+  (delete-todo
+   id
+   #(if (= % 204)
+      (swap! todos dissoc id)
+      (js/alert (str "Delete todo " id " failure!")))
+   )
+  )
 
 (defn mmap [m f a] (->> m (f a) (into (empty m))))
 (defn complete-all [v] (swap! todos mmap map #(assoc-in % [1 :done] v)))

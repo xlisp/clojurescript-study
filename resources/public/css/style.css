@@ -275,6 +275,9 @@ label[for='toggle-all'] {
 	transition: all 0.2s;
 }
 
+#todo-list li .input-label {
+  display: none;
+}
 #todo-list li .input-par {
   width:200px;
   border-radius:10px;

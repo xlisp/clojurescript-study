@@ -100,6 +100,23 @@
                                27 (stop)
                                nil)}])))
 
+(defn todo-input-par [{:keys [id title on-save on-stop]}]
+  (let [val (r/atom title)
+        stop #(do (reset! val "")
+                  (if on-stop (on-stop)))
+        save #(let [v (-> @val str clojure.string/trim)]
+                (if-not (empty? v) (on-save v))
+                (stop))]
+    (fn [{:keys [id class placeholder]}]
+      [:input.input-par {:type "text" :value @val
+               :id id :class class :placeholder placeholder
+               :on-blur save
+               :on-change #(reset! val (-> % .-target .-value))
+               :on-key-down #(case (.-which %)
+                               13 (save)
+                               27 (stop)
+                               nil)}])))
+
 (def todo-edit (with-meta todo-input
                  {:component-did-mount #(.focus (r/dom-node %))}))
 
@@ -126,12 +143,31 @@
        [:div.view
         [:label {:on-double-click #(reset! editing true)} title]
         [:button.destroy {:on-click #(delete id)}]
-        [:button.reply {:on-click #(js/alert id)}]
+        [:button.reply {:on-click #(set! (.-display (.-style (. js/document (getElementById (str "input-label-id-" id)))) ) "block") }]
+        [:label.input-label { :id (str "input-label-id-" id) } (new-todo-par @todo-par-id)]
         ]
        (when @editing
          [todo-edit {:class "edit" :title title
                      :on-save #(save id %)
                      :on-stop #(reset! editing false)}])])))
+(defn new-todo []
+  [todo-input {:id "new-todo"
+               :placeholder "What needs to be done?"
+               :on-save add-todo}]
+  )
+
+(defonce todo-par-id (r/atom nil))
+
+(def new-todo-par
+  (fn [id]
+    [todo-input-par
+     {:id id
+      :type "text"
+      :placeholder (str "what needs to be done for " id " ?")
+      :on-save add-todo
+      }]
+    )
+  )
 
 (defn todo-app [props]
   (let [filt (r/atom :all)]
@@ -143,9 +179,8 @@
          [:section#todoapp
           [:header#header
            [:h1 "todos tree"]
-           [todo-input {:id "new-todo"
-                        :placeholder "What needs to be done?"
-                        :on-save add-todo}]]
+           (new-todo)
+           ]
           (when (-> items count pos?)
             [:div
              [:section#main

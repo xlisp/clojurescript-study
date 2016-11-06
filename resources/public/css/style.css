@@ -275,6 +275,13 @@ label[for='toggle-all'] {
 	transition: all 0.2s;
 }
 
+#todo-list li .input-par {
+  width:200px;
+  border-radius:10px;
+  height:50px;
+  font-size:15px;
+}
+
 #todo-list li .destroy:hover {
 	text-shadow: 0 0 1px #000,
 				 0 0 10px rgba(199, 107, 107, 0.8);

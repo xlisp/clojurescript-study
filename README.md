@@ -51,10 +51,11 @@
   
 ```
 
-##### 4. a标签点击事件
+##### 4. a,button标签点击事件
 lambda响应函数 `{:on-* (fn [x] ..)}` 放在离标签最近的Hash里面
 ```clojure
 [:li [:a {:on-click #(js/alert "这里是a标签点击事件")} "Active"  ]]
+[:button.reply {:on-click #(js/alert id)}]
 ```
 ##### 5. label的双击修改事件on-double-click
 当鼠标双击input时,把input变成可输入修改的模式的class

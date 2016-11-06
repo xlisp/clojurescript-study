@@ -5,12 +5,14 @@
             [cljs.core.async :refer [<!]]))
 (enable-console-print!)
 
+(def todo-api-url "http://127.0.0.1:3001/todos/")
+
 (defonce todos (r/atom (sorted-map)))
 
 (defonce todos-list-init
   (go (let [response
             (<!
-             (http/get "http://127.0.0.1:3001/todos"
+             (http/get todo-api-url
                        {:with-credentials? false
                         :query-params {"since" ""}}))]
         (let [body (:body response)]
@@ -20,7 +22,7 @@
 (defn create-todo [text body]
   (go (let [response
             (<!
-             (http/post "http://127.0.0.1:3001/todos"
+             (http/post todo-api-url
                         {:with-credentials? false
                          :query-params {:title text}}))]
         (if (= (:status response) 201)
@@ -31,7 +33,7 @@
 (defn update-todo [id text body]
   (go (let [response
             (<!
-             (http/put (str "http://127.0.0.1:3001/todos/" id)
+             (http/put (str todo-api-url id)
                        {:with-credentials? false
                         :query-params {:title text}}))]
         (body (:status response))
@@ -40,7 +42,7 @@
 (defn delete-todo [id body]
   (go (let [response
             (<!
-             (http/delete (str "http://127.0.0.1:3001/todos/" id)
+             (http/delete (str todo-api-url id)
                           {:with-credentials? false
                            :query-params {}}))]
         (body (:status response))

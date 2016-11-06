@@ -124,10 +124,10 @@
       [:li {:class (str (if done "completed ")
                         (if @editing "editing"))}
        [:div.view
-        [:input.toggle {:type "checkbox" :checked done
-                        :on-change #(toggle id)}]
         [:label {:on-double-click #(reset! editing true)} title]
-        [:button.destroy {:on-click #(delete id)}]]
+        [:button.destroy {:on-click #(delete id)}]
+        [:button.reply {:on-click #(js/alert id)}]
+        ]
        (when @editing
          [todo-edit {:class "edit" :title title
                      :on-save #(save id %)

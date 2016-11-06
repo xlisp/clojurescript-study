@@ -142,16 +142,13 @@
         [:div
          [:section#todoapp
           [:header#header
-           [:h1 "todos"]
+           [:h1 "todos tree"]
            [todo-input {:id "new-todo"
                         :placeholder "What needs to be done?"
                         :on-save add-todo}]]
           (when (-> items count pos?)
             [:div
              [:section#main
-              [:input#toggle-all {:type "checkbox" :checked (zero? active)
-                                  :on-change #(complete-all (pos? active))}]
-              [:label {:for "toggle-all"} "Mark all as complete"]
               [:ul#todo-list
                (for [todo (filter (case @filt
                                     :active (complement :done)

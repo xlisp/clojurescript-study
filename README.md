@@ -56,10 +56,15 @@ lambda响应函数 `{:on-* (fn [x] ..)}` 放在离标签最近的Hash里面
 ```clojure
 [:li [:a {:on-click #(js/alert "这里是a标签点击事件")} "Active"  ]]
 ```
-##### 5. input过程发生的三种常用的响应函数: input的鼠标点入事件on-key-down, 内容改变事件on-change, 点击其他部分事件on-blur
-* 当鼠标点input的其他部位时,保存update提交
-* 当改变input内容时修改input的值value
-* 当鼠标点入input时,把input变成可输入修改的模式
+##### 5. label的双击修改事件on-double-click
+当鼠标双击input时,把input变成可输入修改的模式的class
+```clojure
+[:label {:on-double-click #(reset! editing true)} title]
+```
+##### 6. input过程发生的三种常用的响应函数: input的键盘输入按下的事件on-key-down, 内容改变事件on-change, 点击input其他部分事件on-blur
+* 当鼠标点input的其他部位时,保存update提交: on-blur
+* 当改变input内容时修改input的值value: on-change
+* 按下键盘,如果是回车13就保存,如果是Esc27就停止修改
 ```clojure
       [:input {:type "text" :value @val
                :id id :class class :placeholder placeholder

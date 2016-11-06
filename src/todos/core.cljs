@@ -15,8 +15,10 @@
              (http/get todo-api-url
                        {:with-credentials? false
                         :query-params {"since" ""}}))]
-        (let [body (:body response)]
-          (reset! todos (zipmap  (map :id body) body) )
+        (let [body (:body response) status (:status response)]
+          (if (= 200 status)
+            (reset! todos (zipmap  (map :id body) body))
+            (js/alert "Get todo list failure, pelease check the todos api!"))
           ))))
 
 (defn create-todo [text body]

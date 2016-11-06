@@ -4,11 +4,9 @@
             [cljs-http.client :as http]
             [cljs.core.async :refer [<!]]))
 (enable-console-print!)
-;;(in-ns 'todos.core)
+
 (defonce todos (r/atom (sorted-map)))
 
-;; (todos-list-init) ；；=> @todos-list
-;; (defonce todos-list (r/atom (sorted-map)))
 (defonce todos-list-init
   (go (let [response
             (<!
@@ -28,18 +26,34 @@
         (body (:body response))
         )))       
 
+(defn update-todo [id text body]
+  (go (let [response
+            (<!
+             (http/put (str "http://127.0.0.1:3001/todos/" id)
+                       {:with-credentials? false
+                        :query-params {:title text}}))]
+        (body (:status response))
+        )))
+
 (defonce counter (r/atom 0))
 
 (defn add-todo [text]
-  (do
-    (create-todo
-     text
-     #(swap! todos assoc (:id %) {:id (:id %) :title (:title %) :done false}))
-    )
+  (create-todo
+   text
+   #(swap! todos assoc (:id %) {:id (:id %) :title (:title %) :done false}))
   )
 
 (defn toggle [id] (swap! todos update-in [id :done] not))
-(defn save [id title] (swap! todos assoc-in [id :title] title))
+
+(defn save [id title]
+  (update-todo
+   id title
+   #(if (= % 204)
+      (swap! todos assoc-in [id :title] title)
+      (js/alert (str "Update todo" id "failure!")))
+   )
+  )
+
 (defn delete [id] (swap! todos dissoc id))
 
 (defn mmap [m f a] (->> m (f a) (into (empty m))))

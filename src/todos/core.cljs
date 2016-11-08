@@ -5,7 +5,7 @@
             [cljs.core.async :refer [<!]]))
 (enable-console-print!)
 
-(def todo-api-url "http://127.0.0.1:3001/todos/")
+(def todo-api-url "http://todos-tree.herokuapp.com/todos/")
 
 (defonce todos (r/atom (sorted-map)))
 

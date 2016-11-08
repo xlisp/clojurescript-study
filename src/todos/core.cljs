@@ -5,7 +5,7 @@
             [cljs.core.async :refer [<!]]))
 (enable-console-print!)
 
-(def todo-api-url "http://127.0.0.1:3001/todos/")
+(def todo-api-url "http://todos-tree.herokuapp.com/todos/")
 
 (defonce todos (r/atom (sorted-map)))
 
@@ -21,12 +21,12 @@
             (js/alert "Get todo list failure, pelease check the todos api!"))
           ))))
 
-(defn create-todo [text body]
+(defn create-todo [text pid body]
   (go (let [response
             (<!
              (http/post todo-api-url
                         {:with-credentials? false
-                         :query-params {:title text}}))]
+                         :query-params {:title text :pid pid}}))]
         (if (= (:status response) 201)
           (body (:body response))
           (js/alert "Create todo failure!"))
@@ -53,10 +53,13 @@
 
 (defonce counter (r/atom 0))
 
-(defn add-todo [text]
-  (create-todo
-   text
-   #(swap! todos assoc (:id %) {:id (:id %) :title (:title %) :done false}))
+(defn add-todo [text pid]
+  (do
+    (create-todo
+     text
+     pid
+     #(swap! todos assoc (:id %) {:id (:id %) :title (:title %) :done false}))
+    )
   )
 
 (defn toggle [id] (swap! todos update-in [id :done] not))
@@ -100,6 +103,23 @@
                                27 (stop)
                                nil)}])))
 
+(defn todo-input-par [{:keys [id title on-save on-stop]}]
+  (let [val (r/atom title)
+        stop #(do (reset! val "")
+                  (if on-stop (on-stop)))
+        save #(let [v (-> @val str clojure.string/trim)]
+                (if-not (empty? v) (on-save v))
+                (stop))]
+    (fn [{:keys [id class placeholder]}]
+      [:input.input-par {:type "text" :value @val
+               :id id :class class :placeholder placeholder
+               :on-blur save
+               :on-change #(reset! val (-> % .-target .-value))
+               :on-key-down #(case (.-which %)
+                               13 (save)
+                               27 (stop)
+                               nil)}])))
+
 (def todo-edit (with-meta todo-input
                  {:component-did-mount #(.focus (r/dom-node %))}))
 
@@ -124,14 +144,31 @@
       [:li {:class (str (if done "completed ")
                         (if @editing "editing"))}
        [:div.view
-        [:input.toggle {:type "checkbox" :checked done
-                        :on-change #(toggle id)}]
         [:label {:on-double-click #(reset! editing true)} title]
-        [:button.destroy {:on-click #(delete id)}]]
+        [:button.destroy {:on-click #(delete id)}]
+        [:button.reply {:on-click #(set! (.-display (.-style (. js/document (getElementById (str "input-label-id-" id)))) ) "block") }]
+        [:label.input-label { :id (str "input-label-id-" id) } (new-todo-par id)]
+        ]
        (when @editing
          [todo-edit {:class "edit" :title title
                      :on-save #(save id %)
                      :on-stop #(reset! editing false)}])])))
+(defn new-todo []
+  [todo-input {:id "new-todo"
+               :placeholder "What needs to be done?"
+               :on-save add-todo}]
+  )
+
+(def new-todo-par
+  (fn [id]
+    [todo-input-par
+     {:id id
+      :type "text"
+      :placeholder (str "Subneed to be done for " id "?")
+      :on-save #(add-todo % id)
+      }]
+    )
+  )
 
 (defn todo-app [props]
   (let [filt (r/atom :all)]
@@ -142,16 +179,12 @@
         [:div
          [:section#todoapp
           [:header#header
-           [:h1 "todos"]
-           [todo-input {:id "new-todo"
-                        :placeholder "What needs to be done?"
-                        :on-save add-todo}]]
+           [:h1 "todos tree"]
+           (new-todo)
+           ]
           (when (-> items count pos?)
             [:div
              [:section#main
-              [:input#toggle-all {:type "checkbox" :checked (zero? active)
-                                  :on-change #(complete-all (pos? active))}]
-              [:label {:for "toggle-all"} "Mark all as complete"]
               [:ul#todo-list
                (for [todo (filter (case @filt
                                     :active (complement :done)

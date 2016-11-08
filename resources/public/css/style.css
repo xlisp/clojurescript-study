@@ -229,7 +229,7 @@ label[for='toggle-all'] {
 }
 
 #todo-list li .toggle:after {
-	content: '✔';
+	content: '↵';
 	/* 40 + a couple of pixels visual adjustment */
 	line-height: 43px;
 	font-size: 20px;
@@ -273,6 +273,16 @@ label[for='toggle-all'] {
 	color: #a88a8a;
 	-webkit-transition: all 0.2s;
 	transition: all 0.2s;
+}
+
+#todo-list li .input-label {
+  display: none;
+}
+#todo-list li .input-par {
+  width:200px;
+  border-radius:10px;
+  height:50px;
+  font-size:15px;
 }
 
 #todo-list li .destroy:hover {
@@ -842,3 +852,35 @@ ul.nav > li.brand > a {
     margin-right: 20px;
     /* border-right: 1px solid #454545; */
 }
+
+
+
+#todo-list li .reply {
+    display: none;
+    text-align: center;
+    width: 40px;
+    height: auto;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin: auto 0;
+    border: none;
+    -webkit-appearance: none;
+}
+
+#todo-list li .reply:hover {
+	text-shadow: 0 0 1px #000,
+				 0 0 10px rgba(199, 107, 107, 0.8);
+	-webkit-transform: scale(1.3);
+	-ms-transform: scale(1.3);
+	transform: scale(1.3);
+}
+
+#todo-list li .reply:after {
+	content: '↵';
+}
+
+#todo-list li:hover .reply {
+	display: block;
+}
+

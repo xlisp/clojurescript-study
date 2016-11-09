@@ -77,7 +77,7 @@ lambda响应函数 `{:on-* (fn [x] ..)}` 放在离标签最近的Hash里面
                                nil)}]
 ```
 
-##### 7. js副作用的写法
+##### 7. js副作用的写法: http://himera.herokuapp.com/synonym.html
 
 ```clojure
            (clojure.string/split window.location.search #"=|\?|\&") ;; 得到完整的参数params

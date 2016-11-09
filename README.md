@@ -77,6 +77,15 @@ lambda响应函数 `{:on-* (fn [x] ..)}` 放在离标签最近的Hash里面
                                nil)}]
 ```
 
+##### 7. js副作用的写法
+
+```clojure
+           (clojure.string/split window.location.search #"=|\?|\&") ;; 得到完整的参数params
+           (-> js/window .-location .-href) ;; 得到完整的链接
+           (.. js/window -location -href) ;; 得到完整的链接
+           (.. js/window -location -search) ;; 得到完整的参数params
+```
+
 ### [演示 heroku: rails api + clojurescript](http://todos-tree.herokuapp.com/todos-tree)
 
 ![](./todos.jpeg)

@@ -86,6 +86,31 @@ lambda响应函数 `{:on-* (fn [x] ..)}` 放在离标签最近的Hash里面
            (.. js/window -location -search) ;; 得到完整的参数params
 ```
 
+方法调用
+
+```clojure
+(.method object params)
+
+(.log js/console "hello world!")
+```
+访问属性
+
+```clojure
+(.-property object)
+
+(.-style div)
+
+```
+设置属性
+
+```clojure
+
+(set! (.-property object))
+
+(set! (.-color (.-style div) "#234567"))
+
+```
+
 ### [演示 heroku: rails api + clojurescript](http://todos-tree.herokuapp.com/todos-tree)
 
 ![](./todos.jpeg)

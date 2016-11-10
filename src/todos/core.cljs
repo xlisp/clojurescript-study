@@ -25,8 +25,9 @@
                         :query-params {"since" ""}}))]
         (let [body (:body response) status (:status response)]
           (cond
-            (= 200 status) (reset! todos (zipmap  (map :id body) body))
+            (= 401 status) (js/alert (str "Unauthorized, please login " host-url "/admins/sign_in"))
             (= 404 status) (js/alert (str "Not found past" past_id "!"))
+            (= 200 status) (reset! todos (zipmap  (map :id body) body))
             :else (js/alert "Get todo list failure, pelease check the todos api!"))
           ))))
 

@@ -11,7 +11,9 @@
 (def host-url (str "http://" (:host params) ":" (:port params)))
 (def params-q (:query params))
 (def past_id (get params-q "past_id"))
-(if past_id nil (js/alert "Params past_id not nil!")) 
+(def first-parid (get params-q "first_parid"))
+(if past_id nil (js/alert "Params past_id not nil!"))
+(if first-parid nil (js/alert "Params first-parid not nil!")) 
 
 (def todo-api-url (str host-url "/pasts/" past_id "/navs.json/"))
 
@@ -179,7 +181,7 @@
 (defn new-todo []
   [todo-input {:id "new-todo"
                :placeholder "What needs to be done?"
-               :on-save add-todo}]
+               :on-save #(add-todo % first-parid)}]
   )
 
 

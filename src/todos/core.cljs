@@ -2,10 +2,18 @@
   (:require-macros [cljs.core.async.macros :refer [go]])
   (:require [reagent.core :as r :refer [atom]]
             [cljs-http.client :as http]
-            [cljs.core.async :refer [<!]]))
+            [cljs.core.async :refer [<!]]
+            [cemerick.url :refer (url url-encode)]
+            ))
 (enable-console-print!)
 
-(def todo-api-url "http://127.0.0.1:3000/pasts/9/navs.json/")
+(def params (url (.. js/window -location -href)))
+(def host-url (str "http://" (:host params) ":" (:port params)))
+(def params-q (:query params))
+(def past_id (get params-q "past_id"))
+(if past_id nil (js/alert "Params past_id not nil!")) 
+
+(def todo-api-url (str host-url "/pasts/" past_id "/navs.json/"))
 
 (defonce todos (r/atom (sorted-map)))
 
@@ -32,7 +40,7 @@
           (js/alert "Create todo failure!"))
         )))       
 
-(defn ud-url [id] (str "http://127.0.0.1:3000/pasts/9/navs/" id ".json") ) 
+(defn ud-url [id] (str host-url "/pasts/" past_id "/navs/" id ".json") ) 
 
 (defn update-todo [id text body]
   (go (let [response

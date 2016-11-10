@@ -5,7 +5,7 @@
             [cljs.core.async :refer [<!]]))
 (enable-console-print!)
 
-(def todo-api-url "http://todos-tree.herokuapp.com/todos/")
+(def todo-api-url "http://127.0.0.1:3000/pasts/9/navs.json/")
 
 (defonce todos (r/atom (sorted-map)))
 
@@ -21,30 +21,32 @@
             (js/alert "Get todo list failure, pelease check the todos api!"))
           ))))
 
-(defn create-todo [text pid body]
+(defn create-todo [text parid body]
   (go (let [response
             (<!
              (http/post todo-api-url
                         {:with-credentials? false
-                         :query-params {:title text :pid pid}}))]
+                         :query-params {:content text :parid parid}}))]
         (if (= (:status response) 201)
           (body (:body response))
           (js/alert "Create todo failure!"))
         )))       
 
+(defn ud-url [id] (str "http://127.0.0.1:3000/pasts/9/navs/" id ".json") ) 
+
 (defn update-todo [id text body]
   (go (let [response
             (<!
-             (http/put (str todo-api-url id)
+             (http/put (ud-url id)
                        {:with-credentials? false
-                        :query-params {:title text}}))]
+                        :query-params {:content text}}))]
         (body (:status response))
         )))
 
 (defn delete-todo [id body]
   (go (let [response
             (<!
-             (http/delete (str todo-api-url id)
+             (http/delete (ud-url id)
                           {:with-credentials? false
                            :query-params {}}))]
         (body (:status response))
@@ -53,22 +55,22 @@
 
 (defonce counter (r/atom 0))
 
-(defn add-todo [text pid]
+(defn add-todo [text parid]
   (do
     (create-todo
      text
-     pid
-     #(swap! todos assoc (:id %) {:id (:id %) :title (:title %) :done false}))
+     parid
+     #(swap! todos assoc (:id %) {:id (:id %) :content (:content %) :done false}))
     )
   )
 
 (defn toggle [id] (swap! todos update-in [id :done] not))
 
-(defn save [id title]
+(defn save [id content]
   (update-todo
-   id title
+   id content
    #(if (= % 204)
-      (swap! todos assoc-in [id :title] title)
+      (swap! todos assoc-in [id :content] content)
       (js/alert (str "Update todo " id " failure!")))
    )
   )
@@ -86,8 +88,8 @@
 (defn complete-all [v] (swap! todos mmap map #(assoc-in % [1 :done] v)))
 (defn clear-done [] (swap! todos mmap remove #(get-in % [1 :done])))
 
-(defn todo-input [{:keys [title on-save on-stop]}]
-  (let [val (r/atom title)
+(defn todo-input [{:keys [content on-save on-stop]}]
+  (let [val (r/atom content)
         stop #(do (reset! val "")
                   (if on-stop (on-stop)))
         save #(let [v (-> @val str clojure.string/trim)]
@@ -103,8 +105,8 @@
                                27 (stop)
                                nil)}])))
 
-(defn todo-input-par [{:keys [id title on-save on-stop]}]
-  (let [val (r/atom title)
+(defn todo-input-par [{:keys [id content on-save on-stop]}]
+  (let [val (r/atom content)
         stop #(do (reset! val "")
                   (if on-stop (on-stop)))
         save #(let [v (-> @val str clojure.string/trim)]
@@ -138,27 +140,6 @@
        [:button#clear-completed {:on-click clear-done}
         "Clear completed " done])]))
 
-(defn todo-item []
-  (let [editing (r/atom false)]
-    (fn [{:keys [id done title]}]
-      [:li {:class (str (if done "completed ")
-                        (if @editing "editing"))}
-       [:div.view
-        [:label {:on-double-click #(reset! editing true)} title]
-        [:button.destroy {:on-click #(delete id)}]
-        [:button.reply {:on-click #(set! (.-display (.-style (. js/document (getElementById (str "input-label-id-" id)))) ) "block") }]
-        [:label.input-label { :id (str "input-label-id-" id) } (new-todo-par id)]
-        ]
-       (when @editing
-         [todo-edit {:class "edit" :title title
-                     :on-save #(save id %)
-                     :on-stop #(reset! editing false)}])])))
-(defn new-todo []
-  [todo-input {:id "new-todo"
-               :placeholder "What needs to be done?"
-               :on-save add-todo}]
-  )
-
 (def new-todo-par
   (fn [id]
     [todo-input-par
@@ -169,6 +150,28 @@
       }]
     )
   )
+
+(defn todo-item []
+  (let [editing (r/atom false)]
+    (fn [{:keys [id done content]}]
+      [:li {:class (str (if done "completed ")
+                        (if @editing "editing"))}
+       [:div.view
+        [:label {:on-double-click #(reset! editing true)} content]
+        [:button.destroy {:on-click #(delete id)}]
+        [:button.reply {:on-click #(set! (.-display (.-style (. js/document (getElementById (str "input-label-id-" id)))) ) "block") }]
+        [:label.input-label { :id (str "input-label-id-" id) } (new-todo-par id)]
+        ]
+       (when @editing
+         [todo-edit {:class "edit" :content content
+                     :on-save #(save id %)
+                     :on-stop #(reset! editing false)}])])))
+(defn new-todo []
+  [todo-input {:id "new-todo"
+               :placeholder "What needs to be done?"
+               :on-save add-todo}]
+  )
+
 
 (defn todo-app [props]
   (let [filt (r/atom :all)]

@@ -88,6 +88,7 @@ lambda响应函数 `{:on-* (fn [x] ..)}` 放在离标签最近的Hash里面
 
 ;; 时间
 (js/Date.) ;;=> #inst "2016-11-11T08:41:21.877-00:00"
+;; js => ` new Date().getFullYear() `
 (.toTimeString (js/Date.)) ;; => "00:36:01 GMT-0800 (PST)"
 (js/Date.now) ;; => 1478853434489
 (.getYear (js/Date.)) ;;=> 116

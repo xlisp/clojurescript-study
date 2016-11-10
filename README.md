@@ -93,6 +93,12 @@ lambda响应函数 `{:on-* (fn [x] ..)}` 放在离标签最近的Hash里面
 (.getYear (js/Date.)) ;;=> 116
 (.getFullYear (js/Date.)) ;; => 2016
 
+(defn current-time []
+  (let [date (js/Date.)]
+    (str (.getFullYear date) "-" (.getMonth date) "-" (.getDate date))
+    ) )
+(current-time) ;;=> "2016-10-11"
+
 ```
 
 方法调用

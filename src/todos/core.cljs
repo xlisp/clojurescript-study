@@ -24,9 +24,10 @@
                        {:with-credentials? false
                         :query-params {"since" ""}}))]
         (let [body (:body response) status (:status response)]
-          (if (= 200 status)
-            (reset! todos (zipmap  (map :id body) body))
-            (js/alert "Get todo list failure, pelease check the todos api!"))
+          (cond
+            (= 200 status) (reset! todos (zipmap  (map :id body) body))
+            (= 404 status) (js/alert (str "Not found past" past_id "!"))
+            :else (js/alert "Get todo list failure, pelease check the todos api!"))
           ))))
 
 (defn create-todo [text parid body]

@@ -131,6 +131,12 @@ lambda响应函数 `{:on-* (fn [x] ..)}` 放在离标签最近的Hash里面
 
 ```
 
+##### 7. dom 
+```clojure
+(js/$ "#dateTabShop li.active a")
+;; => $('#dateTabShop li.active a')
+```
+
 ### [演示 heroku: rails api + clojurescript](http://todos-tree.herokuapp.com/todos-tree)
 
 ![](./todos.jpeg)

@@ -131,10 +131,15 @@ lambda响应函数 `{:on-* (fn [x] ..)}` 放在离标签最近的Hash里面
 
 ```
 
-##### 7. dom 
+##### 8. dom 
 ```clojure
-(js/$ "#dateTabShop li.active a")
 ;; => $('#dateTabShop li.active a')
+(js/$ "#dateTabShop li.active a")
+;; *.first
+(aget (js/$ "#dateTabShop li.active a") 0) ;;=> #object[HTMLAnchorElement http://127.0.0.1:3000/#sh-tran-date]
+;; *.first.title
+(.-title (aget (js/$ "#dateTabShop li.active a") 0)) ;;=> "day"
+
 ```
 
 ### [演示 heroku: rails api + clojurescript](http://todos-tree.herokuapp.com/todos-tree)

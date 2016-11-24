@@ -10,7 +10,11 @@
 渲染模块,可以对cljs纯函数单独测试,单独显示,cljs repl交互式开发
 ```clojure
 (defn todo-app [] [:h1 "test..."])
-(r/render-component [todo-app] (. js/document (getElementById "app")))
+(r/render-component [todo-app] (. js/document (getElementById "app"))) 
+;; $('#app')
+(dom/getElement "app") ;;=> #object[HTMLDivElement [object HTMLDivElement]]
+(. js/document (getElementById "app")) ;;=> #object[HTMLDivElement [object HTMLDivElement]]
+
 ```
 ##### 3. cljs.http
 通过lambda的回调caller传出 `(:body response)`, 然后通过swap!或者reset!将其值放入atom的原子或者列表里面

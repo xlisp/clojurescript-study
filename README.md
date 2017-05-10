@@ -129,6 +129,8 @@ lambda响应函数 `{:on-* (fn [x] ..)}` 放在离标签最近的Hash里面
 
 (set! (.-color (.-style div) "#234567"))
 
+(set! (.-innerHTML (. js/document (getElementById "app"))) "ABC")
+
 ```
 
 ##### 8. dom 

@@ -1,0 +1,1 @@
+web: java $JVM_OPTS -cp target/uberjar/highcharts-reagent-gp.jar clojure.main -m highcharts-reagent-gp.core

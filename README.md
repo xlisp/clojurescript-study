@@ -1,5 +1,22 @@
+# 记录ClojureScript与React的学习经历, 包括reagent和om
 
-### 记录ClojureScript与React的学习经历, 包括reagent和om
+
+
+
+- [记录ClojureScript与React的学习经历, 包括reagent和om](#%E8%AE%B0%E5%BD%95clojurescript%E4%B8%8Ereact%E7%9A%84%E5%AD%A6%E4%B9%A0%E7%BB%8F%E5%8E%86-%E5%8C%85%E6%8B%ACreagent%E5%92%8Com)
+    - [1. r/atom](#1-ratom)
+    - [2. r/render-component](#2-rrender-component)
+    - [3. cljs.http](#3-cljshttp)
+    - [4. a,button标签点击事件](#4-abutton%E6%A0%87%E7%AD%BE%E7%82%B9%E5%87%BB%E4%BA%8B%E4%BB%B6)
+    - [5. label的双击修改事件on-double-click](#5-label%E7%9A%84%E5%8F%8C%E5%87%BB%E4%BF%AE%E6%94%B9%E4%BA%8B%E4%BB%B6on-double-click)
+    - [6. input过程发生的三种常用的响应函数: input的键盘输入按下的事件on-key-down, 内容改变事件on-change, 点击input其他部分事件on-blur](#6-input%E8%BF%87%E7%A8%8B%E5%8F%91%E7%94%9F%E7%9A%84%E4%B8%89%E7%A7%8D%E5%B8%B8%E7%94%A8%E7%9A%84%E5%93%8D%E5%BA%94%E5%87%BD%E6%95%B0-input%E7%9A%84%E9%94%AE%E7%9B%98%E8%BE%93%E5%85%A5%E6%8C%89%E4%B8%8B%E7%9A%84%E4%BA%8B%E4%BB%B6on-key-down-%E5%86%85%E5%AE%B9%E6%94%B9%E5%8F%98%E4%BA%8B%E4%BB%B6on-change-%E7%82%B9%E5%87%BBinput%E5%85%B6%E4%BB%96%E9%83%A8%E5%88%86%E4%BA%8B%E4%BB%B6on-blur)
+    - [7. js副作用的写法: http://himera.herokuapp.com/synonym.html](#7-js%E5%89%AF%E4%BD%9C%E7%94%A8%E7%9A%84%E5%86%99%E6%B3%95-httphimeraherokuappcomsynonymhtml)
+    - [8. dom](#8-dom)
+- [演示 heroku: rails api + clojurescript](#%E6%BC%94%E7%A4%BA-heroku-rails-api--clojurescript)
+
+
+
+
 
 ##### 1. r/atom 
 只要修改atom内的任意一值,整个应用的任意一引用到atom的地方,都会底层自动修改掉

@@ -122,11 +122,6 @@ lambda响应函数 `{:on-* (fn [x] ..)}` 放在离标签最近的Hash里面
 (current-time) ;;=> "2016-10-11"
 
 ```
-##### 8. 滚动事件
-
-```clojurescript
-(set! js/window.onscroll #(js/alert 111))
-```
 
 方法调用
 
@@ -165,6 +160,21 @@ lambda响应函数 `{:on-* (fn [x] ..)}` 放在离标签最近的Hash里面
 (.-title (aget (js/$ "#dateTabShop li.active a") 0)) ;;=> "day"
 
 ```
+
+##### 9. 滚动事件和高度计算
+
+```clojurescript
+(set! js/window.onscroll #(js/alert 111))
+
+
+;; jimw_clj.core.cur_doc_top(): 底部是27737,头部是0
+(defn cur-doc-top []
+  (.. js/document -documentElement -scrollTop))
+
+(.. js/document -documentElement -scrollHeight)
+
+```
+
 
 ### [演示 heroku: rails api + clojurescript](http://todos-tree.herokuapp.com/todos-tree)
 

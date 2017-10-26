@@ -122,6 +122,11 @@ lambda响应函数 `{:on-* (fn [x] ..)}` 放在离标签最近的Hash里面
 (current-time) ;;=> "2016-10-11"
 
 ```
+##### 8. 滚动事件
+
+```clojurescript
+(set! js/window.onscroll #(js/alert 111))
+```
 
 方法调用
 

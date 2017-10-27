@@ -173,6 +173,14 @@ lambda响应函数 `{:on-* (fn [x] ..)}` 放在离标签最近的Hash里面
 
 (.. js/document -documentElement -scrollHeight)
 
+;; 
+(defn is-page-end []
+  (<=
+   (- (.. js/document -documentElement -scrollHeight) ;; 整个页面的高度
+      (.. js/document -documentElement -scrollTop)) ;; 窗口和页面两张纸, 会变的滚动高度
+   (.. js/document -documentElement -offsetHeight)  ;; 控制台变小和变大会影响`窗口高度`
+   ))
+   
 ```
 
 

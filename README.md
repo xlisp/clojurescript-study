@@ -1,9 +1,8 @@
-# 记录ClojureScript与React的学习经历, 包括reagent和om
+# 记录ClojureScript的学习经历
 
 
 
-
-- [记录ClojureScript与React的学习经历, 包括reagent和om](#%E8%AE%B0%E5%BD%95clojurescript%E4%B8%8Ereact%E7%9A%84%E5%AD%A6%E4%B9%A0%E7%BB%8F%E5%8E%86-%E5%8C%85%E6%8B%ACreagent%E5%92%8Com)
+- [记录ClojureScript的学习经历](#%E8%AE%B0%E5%BD%95clojurescript%E4%B8%8Ereact%E7%9A%84%E5%AD%A6%E4%B9%A0%E7%BB%8F%E5%8E%86-%E5%8C%85%E6%8B%ACreagent%E5%92%8Com)
     - [1. r/atom](#1-ratom)
     - [2. r/render-component](#2-rrender-component)
     - [3. cljs.http](#3-cljshttp)
